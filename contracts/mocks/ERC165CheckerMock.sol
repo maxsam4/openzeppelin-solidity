@@ -1,32 +1,25 @@
-pragma solidity ^0.4.24;
+// SPDX-License-Identifier: MIT
 
-import "../introspection/ERC165Checker.sol";
+pragma solidity ^0.8.0;
 
+import "../utils/introspection/ERC165Checker.sol";
 
 contract ERC165CheckerMock {
-  using ERC165Checker for address;
+    using ERC165Checker for address;
 
-  function supportsERC165(address _address)
-    public
-    view
-    returns (bool)
-  {
-    return _address.supportsERC165();
-  }
+    function supportsERC165(address account) public view returns (bool) {
+        return account.supportsERC165();
+    }
 
-  function supportsInterface(address _address, bytes4 _interfaceId)
-    public
-    view
-    returns (bool)
-  {
-    return _address.supportsInterface(_interfaceId);
-  }
+    function supportsInterface(address account, bytes4 interfaceId) public view returns (bool) {
+        return account.supportsInterface(interfaceId);
+    }
 
-  function supportsInterfaces(address _address, bytes4[] _interfaceIds)
-    public
-    view
-    returns (bool)
-  {
-    return _address.supportsInterfaces(_interfaceIds);
-  }
+    function supportsAllInterfaces(address account, bytes4[] memory interfaceIds) public view returns (bool) {
+        return account.supportsAllInterfaces(interfaceIds);
+    }
+
+    function getSupportedInterfaces(address account, bytes4[] memory interfaceIds) public view returns (bool[] memory) {
+        return account.getSupportedInterfaces(interfaceIds);
+    }
 }

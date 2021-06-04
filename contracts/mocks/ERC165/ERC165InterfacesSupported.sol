@@ -1,69 +1,58 @@
-pragma solidity ^0.4.24;
+// SPDX-License-Identifier: MIT
 
-import "../../introspection/IERC165.sol";
+pragma solidity ^0.8.0;
 
+import "../../utils/introspection/IERC165.sol";
 
 /**
- * https://github.com/ethereum/EIPs/blob/master/EIPS/eip-214.md#specification
- * > Any attempts to make state-changing operations inside an execution instance with STATIC set to true will instead throw an exception.
+ * https://eips.ethereum.org/EIPS/eip-214#specification
+ * From the specification:
+ * > Any attempts to make state-changing operations inside an execution instance with STATIC set to true will instead
+ * throw an exception.
  * > These operations include [...], LOG0, LOG1, LOG2, [...]
  *
  * therefore, because this contract is staticcall'd we need to not emit events (which is how solidity-coverage works)
  * solidity-coverage ignores the /mocks folder, so we duplicate its implementation here to avoid instrumenting it
  */
 contract SupportsInterfaceWithLookupMock is IERC165 {
+    /*
+     * bytes4(keccak256('supportsInterface(bytes4)')) == 0x01ffc9a7
+     */
+    bytes4 public constant INTERFACE_ID_ERC165 = 0x01ffc9a7;
 
-  bytes4 public constant InterfaceId_ERC165 = 0x01ffc9a7;
-  /**
-   * 0x01ffc9a7 ===
-   *   bytes4(keccak256('supportsInterface(bytes4)'))
-   */
+    /**
+     * @dev A mapping of interface id to whether or not it's supported.
+     */
+    mapping(bytes4 => bool) private _supportedInterfaces;
 
-  /**
-   * @dev a mapping of interface id to whether or not it's supported
-   */
-  mapping(bytes4 => bool) internal supportedInterfaces;
+    /**
+     * @dev A contract implementing SupportsInterfaceWithLookup
+     * implement ERC165 itself.
+     */
+    constructor () {
+        _registerInterface(INTERFACE_ID_ERC165);
+    }
 
-  /**
-   * @dev A contract implementing SupportsInterfaceWithLookup
-   * implement ERC165 itself
-   */
-  constructor()
-    public
-  {
-    _registerInterface(InterfaceId_ERC165);
-  }
+    /**
+     * @dev Implement supportsInterface(bytes4) using a lookup table.
+     */
+    function supportsInterface(bytes4 interfaceId) public view override returns (bool) {
+        return _supportedInterfaces[interfaceId];
+    }
 
-  /**
-   * @dev implement supportsInterface(bytes4) using a lookup table
-   */
-  function supportsInterface(bytes4 _interfaceId)
-    external
-    view
-    returns (bool)
-  {
-    return supportedInterfaces[_interfaceId];
-  }
-
-  /**
-   * @dev private method for registering an interface
-   */
-  function _registerInterface(bytes4 _interfaceId)
-    internal
-  {
-    require(_interfaceId != 0xffffffff);
-    supportedInterfaces[_interfaceId] = true;
-  }
+    /**
+     * @dev Private method for registering an interface.
+     */
+    function _registerInterface(bytes4 interfaceId) internal {
+        require(interfaceId != 0xffffffff, "ERC165InterfacesSupported: invalid interface id");
+        _supportedInterfaces[interfaceId] = true;
+    }
 }
 
-
-
 contract ERC165InterfacesSupported is SupportsInterfaceWithLookupMock {
-  constructor (bytes4[] _interfaceIds)
-    public
-  {
-    for (uint256 i = 0; i < _interfaceIds.length; i++) {
-      _registerInterface(_interfaceIds[i]);
+    constructor (bytes4[] memory interfaceIds) {
+        for (uint256 i = 0; i < interfaceIds.length; i++) {
+            _registerInterface(interfaceIds[i]);
+        }
     }
-  }
 }

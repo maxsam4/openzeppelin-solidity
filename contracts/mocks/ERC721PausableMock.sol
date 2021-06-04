@@ -1,22 +1,41 @@
-pragma solidity ^0.4.24;
+// SPDX-License-Identifier: MIT
 
-import "../token/ERC721/ERC721Pausable.sol";
+pragma solidity ^0.8.0;
 
+import "../token/ERC721/extensions/ERC721Pausable.sol";
 
 /**
  * @title ERC721PausableMock
  * This mock just provides a public mint, burn and exists functions for testing purposes
  */
 contract ERC721PausableMock is ERC721Pausable {
-  function mint(address _to, uint256 _tokenId) public {
-    super._mint(_to, _tokenId);
-  }
+    constructor (string memory name, string memory symbol) ERC721(name, symbol) { }
 
-  function burn(uint256 _tokenId) public {
-    super._burn(ownerOf(_tokenId), _tokenId);
-  }
+    function pause() external {
+        _pause();
+    }
 
-  function exists(uint256 _tokenId) public view returns (bool) {
-    return super._exists(_tokenId);
-  }
+    function unpause() external {
+        _unpause();
+    }
+
+    function exists(uint256 tokenId) public view returns (bool) {
+        return _exists(tokenId);
+    }
+
+    function mint(address to, uint256 tokenId) public {
+        _mint(to, tokenId);
+    }
+
+    function safeMint(address to, uint256 tokenId) public {
+        _safeMint(to, tokenId);
+    }
+
+    function safeMint(address to, uint256 tokenId, bytes memory _data) public {
+        _safeMint(to, tokenId, _data);
+    }
+
+    function burn(uint256 tokenId) public {
+        _burn(tokenId);
+    }
 }

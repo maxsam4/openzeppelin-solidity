@@ -1,35 +1,37 @@
-pragma solidity ^0.4.24;
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.0;
 
 import "../token/ERC721/ERC721.sol";
 
-
 /**
  * @title ERC721Mock
- * This mock just provides a public mint and burn functions for testing purposes,
- * and a public setter for metadata URI
+ * This mock just provides a public safeMint, mint, and burn functions for testing purposes
  */
 contract ERC721Mock is ERC721 {
-  constructor(string name, string symbol) public
-    ERC721(name, symbol)
-  { }
+    constructor (string memory name, string memory symbol) ERC721(name, symbol) { }
 
-  function mint(address _to, uint256 _tokenId) public {
-    _mint(_to, _tokenId);
-  }
+    function baseURI() public view returns (string memory) {
+        return _baseURI();
+    }
 
-  function burn(uint256 _tokenId) public {
-    _burn(ownerOf(_tokenId), _tokenId);
-  }
+    function exists(uint256 tokenId) public view returns (bool) {
+        return _exists(tokenId);
+    }
 
-  function exists(uint256 _tokenId) public view returns (bool) {
-    return _exists(_tokenId);
-  }
+    function mint(address to, uint256 tokenId) public {
+        _mint(to, tokenId);
+    }
 
-  function setTokenURI(uint256 _tokenId, string _uri) public {
-    _setTokenURI(_tokenId, _uri);
-  }
+    function safeMint(address to, uint256 tokenId) public {
+        _safeMint(to, tokenId);
+    }
 
-  function removeTokenFrom(address _from, uint256 _tokenId) public {
-    _removeTokenFrom(_from, _tokenId);
-  }
+    function safeMint(address to, uint256 tokenId, bytes memory _data) public {
+        _safeMint(to, tokenId, _data);
+    }
+
+    function burn(uint256 tokenId) public {
+        _burn(tokenId);
+    }
 }

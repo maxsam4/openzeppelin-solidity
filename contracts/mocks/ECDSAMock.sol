@@ -1,25 +1,17 @@
-pragma solidity ^0.4.24;
+// SPDX-License-Identifier: MIT
 
+pragma solidity ^0.8.0;
 
-import "../cryptography/ECDSA.sol";
-
+import "../utils/cryptography/ECDSA.sol";
 
 contract ECDSAMock {
-  using ECDSA for bytes32;
+    using ECDSA for bytes32;
 
-  function recover(bytes32 _hash, bytes _signature)
-    public
-    pure
-    returns (address)
-  {
-    return _hash.recover(_signature);
-  }
+    function recover(bytes32 hash, bytes memory signature) public pure returns (address) {
+        return hash.recover(signature);
+    }
 
-  function toEthSignedMessageHash(bytes32 _hash)
-    public
-    pure
-    returns (bytes32)
-  {
-    return _hash.toEthSignedMessageHash();
-  }
+    function toEthSignedMessageHash(bytes32 hash) public pure returns (bytes32) {
+        return hash.toEthSignedMessageHash();
+    }
 }

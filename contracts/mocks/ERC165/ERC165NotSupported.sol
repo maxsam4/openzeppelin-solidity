@@ -1,6 +1,5 @@
-pragma solidity ^0.4.24;
+// SPDX-License-Identifier: MIT
 
+pragma solidity ^0.8.0;
 
-contract ERC165NotSupported {
-
-}
+contract ERC165NotSupported { }

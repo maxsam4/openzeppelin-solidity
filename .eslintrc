@@ -1,22 +1,25 @@
 {
   "extends" : [
     "standard",
-    "plugin:promise/recommended"
+    "plugin:promise/recommended",
   ],
   "plugins": [
-    "promise"
+    "mocha-no-only",
+    "promise",
   ],
   "env": {
     "browser" : true,
     "node"    : true,
     "mocha"   : true,
-    "jest"    : true
+    "jest"    : true,
   },
   "globals" : {
     "artifacts": false,
     "contract": false,
     "assert": false,
-    "web3": false
+    "web3": false,
+    "usePlugin": false,
+    "extendEnvironment": false,
   },
   "rules": {
 
@@ -24,8 +27,9 @@
     "strict": ["error", "global"],
 
     // Code style
+    "array-bracket-spacing": ["off"],
     "camelcase": ["error", {"properties": "always"}],
-    "comma-dangle": ["warn", "always-multiline"],
+    "comma-dangle": ["error", "always-multiline"],
     "comma-spacing": ["error", {"before": false, "after": true}],
     "dot-notation": ["error", {"allowKeywords": true, "allowPattern": ""}],
     "eol-last": ["error", "always"],
@@ -49,7 +53,12 @@
     "semi": ["error", "always"],
     "space-before-function-paren": ["error", "always"],
 
+    "mocha-no-only/mocha-no-only": ["error"],
+
     "promise/always-return": "off",
     "promise/avoid-new": "off",
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018
   }
 }
